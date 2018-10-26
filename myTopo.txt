@@ -1,0 +1,171 @@
+graph [
+  node [
+    id 0
+    label "n0"
+  ]
+  node [
+    id 1
+    label "n1"
+  ]
+  node [
+    id 2
+    label "n2"
+  ]
+  node [
+    id 3
+    label "n3"
+  ]
+  node [
+    id 4
+    label "n4"
+  ]
+  node [
+    id 5
+    label "n5"
+  ]
+  node [
+    id 6
+    label "n6"
+  ]
+  node [
+    id 7
+    label "n7"
+  ]
+  node [
+    id 8
+    label "n8"
+  ]
+  node [
+    id 9
+    label "n9"
+  ]
+  node [
+    id 10
+    label "n10"
+  ]
+  node [
+    id 11
+    label "n11"
+  ]
+    node [
+    id 12
+    label "n12"
+  ]
+    node [
+    id 13
+    label "n13"
+  ]
+    node [
+    id 14
+    label "n14"
+  ]
+    node [
+    id 15
+    label "n15"
+  ]
+  edge [
+    source 0
+    target 1
+    weight 1
+    reverse 0
+    id "e1"
+  ]
+  edge [
+    source 0
+    target 2
+    weight 2
+    reverse 0
+    id "e2"
+  ]
+  edge [
+    source 0
+    target 3
+    weight 2
+    reverse 0
+    id "e3"
+  ]
+  edge [
+    source 1
+    target 4
+    weight 1
+    reverse 0
+    id "e4"
+  ]
+  edge [
+    source 1
+    target 5
+    weight 1
+    reverse 0
+    id "e5"
+  ]
+  edge [
+    source 2
+    target 5
+    weight 2
+    reverse 0
+    id "e6"
+  ]
+  edge [
+    source 3
+    target 6
+    weight 2
+    reverse 0
+    id "e7"
+  ]
+  edge [
+    source 5
+    target 6
+    weight 3
+    reverse 0
+    id "e8"
+  ]
+  edge [
+    source 4
+    target 7
+    weight 1
+    reverse 0
+    id "e9"
+  ]
+  edge [
+    source 5
+    target 8
+    weight 2
+    reverse 0
+    id "e10"
+  ]
+  edge [
+    source 6
+    target 9
+    weight 2
+    reverse 0
+    id "e11"
+  ]
+  edge [
+    source 8
+    target 7
+    weight 1
+    reverse 1
+    id "e12"
+  ]
+  edge [
+    source 7
+    target 10
+    weight 1
+    reverse 0
+    id "e13"
+  ]
+  edge [
+    source 8
+    target 10
+    weight 2
+    reverse 0
+    id "e14"
+  ]
+  edge [
+    source 9
+    target 10
+    weight 2
+    reverse 0
+    id "e15"
+  ]
+]
