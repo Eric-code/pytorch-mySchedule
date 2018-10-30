@@ -53,7 +53,7 @@ class Net:
         dpkt = sniff(offline='testdata2.pcap')
         dpkt = list(dpkt)
         random.shuffle(dpkt)  # 打乱数据包的顺序
-        endtimes = [2, 2, 3, 3]
+        endtimes = [6, 7, 8, 9]
         priors = [4, 3, 2, 1]
         for packet in dpkt:
             tos = packet[IP].tos / 4
@@ -81,7 +81,7 @@ class Net:
         G = nx.read_gml("myTopo.txt")  # Poland, ANS，DFN
         nodes = list(G.nodes())  # 从拓扑图中获取到的所有节点名称
         edges = list(G.edges())  # 从拓扑图中获取到的所有链路，由源节点和目的节点构成
-        for i in range(12):
+        for i in range(20):
             name = "n"+str(i)
             for node_name in nodes:
                 if node_name == name:
@@ -100,62 +100,101 @@ class Net:
         n9 = node_list[9]
         n10 = node_list[10]
         n11 = node_list[11]
+        n12 = node_list[12]
+        n13 = node_list[13]
+        n14 = node_list[14]
+        n15 = node_list[15]
+        n16 = node_list[16]
+        n17 = node_list[17]
+        n18 = node_list[18]
+        n19 = node_list[19]
+        # n20 = node_list[20]
+        # n21 = node_list[21]
+        # n22 = node_list[22]
+        # n23 = node_list[23]
+        # n24 = node_list[24]
+        # n25 = node_list[25]
+        # n26 = node_list[26]
+        # n27 = node_list[27]
+        # n28 = node_list[28]
+
         n0.down_nodes.append(n1)
         n0.down_weights.append(2)
         n0.down_nodes.append(n2)
         n0.down_weights.append(2)
         n0.down_nodes.append(n3)
-        n0.down_weights.append(1)
+        n0.down_weights.append(2)
         n1.down_nodes.append(n4)
-        n1.down_weights.append(1)
-        n1.down_nodes.append(n5)
         n1.down_weights.append(2)
-        n2.down_nodes.append(n6)
-        n2.down_weights.append(2)
-        n2.down_nodes.append(n7)
+        n2.down_nodes.append(n4)
         n2.down_weights.append(1)
-        n3.down_nodes.append(n7)
+        n2.down_nodes.append(n5)
+        n2.down_weights.append(1)
+        n3.down_nodes.append(n5)
         n3.down_weights.append(1)
-        n4.down_nodes.append(n8)
-        n4.down_weights.append(1)
+        n3.down_nodes.append(n6)
+        n3.down_weights.append(2)
+        n4.down_nodes.append(n7)
+        n4.down_weights.append(2)
         n5.down_nodes.append(n8)
         n5.down_weights.append(2)
-        n5.down_nodes.append(n6)
-        n5.down_weights.append(1)
         n6.down_nodes.append(n9)
         n6.down_weights.append(2)
         n7.down_nodes.append(n10)
         n7.down_weights.append(1)
+        n7.down_nodes.append(n11)
+        n7.down_weights.append(1)
         n8.down_nodes.append(n11)
         n8.down_weights.append(2)
-        n9.down_nodes.append(n11)
+        n9.down_nodes.append(n12)
         n9.down_weights.append(2)
-        n10.down_nodes.append(n9)
+        n10.down_nodes.append(n13)
         n10.down_weights.append(1)
-        n10.down_nodes.append(n11)
-        n10.down_weights.append(1)
+        n11.down_nodes.append(n16)
+        n11.down_weights.append(3)
+        n12.down_nodes.append(n15)
+        n12.down_weights.append(2)
+        n13.down_nodes.append(n14)
+        n13.down_weights.append(1)
+        n13.down_nodes.append(n16)
+        n13.down_weights.append(1)
+        n14.down_nodes.append(n18)
+        n14.down_weights.append(1)
+        n15.down_nodes.append(n16)
+        n15.down_weights.append(1)
+        n15.down_nodes.append(n17)
+        n15.down_weights.append(2)
+        n16.down_nodes.append(n19)
+        n16.down_weights.append(3)
+        n17.down_nodes.append(n19)
+        n17.down_weights.append(2)
+        n18.down_nodes.append(n19)
+        n18.down_weights.append(1)
+        # n16.down_nodes.append(n20)
+        # n16.down_weights.append(3)
+        # n17.down_nodes.append(n21)
+        # n17.down_weights.append(2)
+        # n18.down_nodes.append(n19)
+        # n18.down_weights.append(1)
+        # n19.down_nodes.append(n22)
+        # n19.down_weights.append(1)
+        # n20.down_nodes.append(n23)
+        # n20.down_weights.append(3)
+        # n21.down_nodes.append(n24)
+        # n21.down_weights.append(2)
+        # n22.down_nodes.append(n25)
+        # n22.down_weights.append(1)
+        # n23.down_nodes.append(n26)
+        # n23.down_weights.append(3)
+        # n24.down_nodes.append(n27)
+        # n24.down_weights.append(2)
+        # n25.down_nodes.append(n28)
+        # n25.down_weights.append(1)
+        # n26.down_nodes.append(n28)
+        # n26.down_weights.append(3)
+        # n27.down_nodes.append(n28)
+        # n27.down_weights.append(2)
 
-        # for node_name in nodes:
-        #     node_name = Net.Node(node_name)
-        #     node_list.append(node_name)
-        # for node in node_list:
-        #     for edge in edges:
-        #         if edge[0] == node.name:
-        #             for next_node in node_list:
-        #                 if edge[1] == next_node.name:
-        #                     weight = G.get_edge_data(edge[0], edge[1])['weight']  # 获取链路权重
-        #                     reverse = G.get_edge_data(edge[0], edge[1])['reverse']  # 获取链路正反方向
-        #                     newedge = Net.Edge(node, next_node, weight)
-        #                     if not reverse:
-        #                         node.edges.append(newedge)
-        #                         node.down_nodes.append(next_node)
-        #                         node.down_weights.append(weight)
-        #                         next_node.up_nodes.append(node)
-        #                     else:
-        #                         next_node.edges.append(newedge)
-        #                         next_node.down_nodes.append(node)
-        #                         next_node.down_weights.append(weight)
-        #                         node.up_nodes.append(next_node)
         sourcenode = node_list[0]
         path_nodes = []
         depth = 0

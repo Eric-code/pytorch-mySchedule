@@ -58,8 +58,8 @@ def main():
     # envs = make_vec_envs(args.env_name, args.seed, args.num_processes,
     #                     args.gamma, args.log_dir, args.add_timestep, device, False)
 
-    observation_space = Box(low=0, high=10000, shape=(11,), dtype=np.float32)  # Box(84,84,4)
-    action_space = Discrete(8)  # Discrete(4)
+    observation_space = Box(low=0, high=10000, shape=(19,), dtype=np.float32)  # Box(84,84,4)
+    action_space = Discrete(10)  # Discrete(4)
 
     actor_critic = Policy(observation_space.shape, action_space, base_kwargs={'recurrent': None})
     actor_critic.to(device)
@@ -80,12 +80,12 @@ def main():
 
     rollouts = RolloutStorage(8000, 1, observation_space.shape, action_space, actor_critic.recurrent_hidden_state_size)
 
-    obs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    obs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     rollouts.obs[0].copy_(torch.Tensor(obs))
     rollouts.to(device)
 
     episode_rewards = deque(maxlen=10)
-    f = open('ackrt_pytorch.txt', 'a')
+    f = open('ackrt_pytorch_29.txt', 'a')
     f.write("\noriginal loss(schedule 5 packets):")
     start = time.time()
     for j in range(num_updates):  # num_updates
@@ -96,8 +96,8 @@ def main():
         count = 0
         remove_count = 0  # 记录丢弃的数据包的值
         end_time = startnode.messages[0].end_time
-        s = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, end_time]
-        states = [[0], [], [], [], [], [], [], [], [], [], [], []]  # 用来存储所有节点状态
+        s = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, end_time]
+        states = [[0], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]  # 用来存储所有节点状态
         ep_r = 0
         ep_acc_r = 0
         obs[:] = s

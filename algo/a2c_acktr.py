@@ -49,6 +49,7 @@ class A2C_ACKTR():
         action_log_probs = action_log_probs.view(num_steps, num_processes, 1)
         self.old_action_log_probs = action_log_probs
 
+        # modified loss:
         # advantages1 = (rollouts.returns[:-1] - values).detach().pow(2)
         # advantages2 = (rollouts.returns[:-1] - vpredclipped).detach().pow(2)
         # advantages = np.maximum(advantages1, advantages2)
