@@ -59,7 +59,7 @@ def main():
     #                     args.gamma, args.log_dir, args.add_timestep, device, False)
 
     observation_space = Box(low=0, high=10000, shape=(19,), dtype=np.float32)  # Box(84,84,4)
-    action_space = Discrete(10)  # Discrete(4)
+    action_space = Discrete(7)  # Discrete(4)
 
     actor_critic = Policy(observation_space.shape, action_space, base_kwargs={'recurrent': None})
     actor_critic.to(device)
@@ -85,7 +85,7 @@ def main():
     rollouts.to(device)
 
     episode_rewards = deque(maxlen=10)
-    f = open('ackrt_pytorch_29.txt', 'a')
+    f = open('ackrt_pytorch_20_origin.txt', 'a')
     f.write("\noriginal loss(schedule 5 packets):")
     start = time.time()
     for j in range(num_updates):  # num_updates
