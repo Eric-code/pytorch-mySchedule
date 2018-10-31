@@ -86,7 +86,7 @@ def main():
 
     episode_rewards = deque(maxlen=10)
     f = open('ackrt_pytorch_20_origin.txt', 'a')
-    f.write("\noriginal loss(schedule 5 packets):")
+    f.write("\noriginal loss(schedule 6 packets):")
     start = time.time()
     for j in range(num_updates):  # num_updates
         net = Net()

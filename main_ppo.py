@@ -292,7 +292,7 @@ class Net:
         message.path = path
         path_oneNode = path.nodes[0]  # 获取该路径的除了源节点的第一个节点
         path_oneNode.messages.append(message)  # 新消息进入选中的路径
-        if count % 5 == 0:  # 此时进行一次调度
+        if count % 6 == 0:  # 此时进行一次调度
             scheduled = True
             for node in reversed(node_list[1:-1]):  # 遍历所有节点进行一次调度
                 for down_node in node.down_nodes:
@@ -335,7 +335,7 @@ class Net:
                 for msg in node.messages:
                     nodelist_state[index].append(msg)
         flag = False
-        r = - acc_r + 6.7 - penalty  # 7, 8.5, 10.1, 11.7, 13.4
+        r = - acc_r + 8.3 - penalty  # 7, 8.5, 10.1, 11.7, 13.4
         # r = 1.1 - penalty
         # r = Net.get_reward(self, flag, node_list, path, message, scheduled)
         endnode = node_list[-1]
