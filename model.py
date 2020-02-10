@@ -17,12 +17,13 @@ class Policy(nn.Module):
         if base_kwargs is None:
             base_kwargs = {}
 
-        if len(obs_shape) == 3:
-            self.base = CNNBase(obs_shape[0], **base_kwargs)
-        elif len(obs_shape) == 1:
-            self.base = MLPBase(obs_shape[0], **base_kwargs)
-        else:
-            raise NotImplementedError
+        # if len(obs_shape) == 3:
+        #     self.base = CNNBase(obs_shape[0], **base_kwargs)
+        # elif len(obs_shape) == 1:
+        #     self.base = MLPBase(obs_shape[0], **base_kwargs)
+        # else:
+        #     raise NotImplementedError
+        self.base = MLPBase(obs_shape, **base_kwargs)
 
         if action_space.__class__.__name__ == "Discrete":
             num_outputs = action_space.n

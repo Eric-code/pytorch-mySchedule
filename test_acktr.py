@@ -21,6 +21,7 @@ from storage import RolloutStorage
 from utils import get_vec_normalize
 from visualize import visdom_plot
 from main_ppo import Net
+import random
 
 
 num_updates = int(40000000) // 8000 // 1
@@ -58,10 +59,14 @@ def main():
     # envs = make_vec_envs(args.env_name, args.seed, args.num_processes,
     #                     args.gamma, args.log_dir, args.add_timestep, device, False)
 
-    observation_space = Box(low=0, high=10000, shape=(19,), dtype=np.float32)  # Box(84,84,4)
+    observation_space = Box(low=0, high=10000, shape=(26,), dtype=np.float32)  # Box(84,84,4)
     action_space = Discrete(7)  # Discrete(4)
 
-    actor_critic = Policy(observation_space.shape, action_space, base_kwargs={'recurrent': None})
+    rt_observation_space = gym.spaces.Tuple((observation_space, action_space))
+    # input_dim = sum(s.shape[0] for s in rt_observation_space)
+    input_dim = 26
+
+    actor_critic = Policy(input_dim, action_space, base_kwargs={'recurrent': None})
     actor_critic.to(device)
 
     # if args.algo == 'a2c':
@@ -80,7 +85,7 @@ def main():
 
     rollouts = RolloutStorage(8000, 1, observation_space.shape, action_space, actor_critic.recurrent_hidden_state_size)
 
-    obs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    obs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]  # , 0, 1, 0, 0, 0, 0
     rollouts.obs[0].copy_(torch.Tensor(obs))
     rollouts.to(device)
 
@@ -96,12 +101,20 @@ def main():
         count = 0
         remove_count = 0  # 记录丢弃的数据包的值
         end_time = startnode.messages[0].end_time
-        s = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, end_time]
+        pre_action_item = random.randint(0, 6)
+        pre_action_item_oh = convert_one_hot(pre_action_item, 7)
+        s = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, end_time, pre_action_item_oh]
+        # s = s.extend(action_vector)
         states = [[0], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]  # 用来存储所有节点状态
         ep_r = 0
         ep_acc_r = 0
         obs[:] = s
         reward_ten = torch.Tensor(1, 1)
+        pre_value = torch.FloatTensor([[0.1]])
+        pre_action = torch.Tensor([[random.randint(0, 6)]])
+        pre_action_log_prob = torch.FloatTensor([[-1.]])
+        pre_recurrent_hidden_states = torch.FloatTensor([[0.]])
+        pre_masks = torch.FloatTensor([[0.]])
         for step in range(8000):
             # Sample actions
             count += 1
@@ -113,9 +126,8 @@ def main():
                         rollouts.recurrent_hidden_states[step],
                         rollouts.masks[step])
                 action_item = action.item()  # 将Tensor类型的数据转化为Int型
-
             # Obser reward and next obs
-            obs, reward, done, states, remove_count, acc_r, su_packets = net.schedule(action_item, count, states, node_list, path_list,
+            obs, reward, done, states, remove_count, acc_r, su_packets = net.schedule(pre_action_item, count, states, node_list, path_list,
                                                                             remove_count)
 
             ep_r += reward
@@ -125,12 +137,19 @@ def main():
             #     if 'episode' in info.keys():
             #         episode_rewards.append(info['episode']['r'])
 
-            # If done then clean the history of observations.
-            masks = torch.FloatTensor([[0.0] if done else [1.0]])
+
+            obs.extend(pre_action_item_oh)
             # print((obs), recurrent_hidden_states, torch.Tensor(action), type(action_log_prob), type(value), type(reward), type(masks))
-            rollouts.insert(torch.Tensor(obs), recurrent_hidden_states, action, action_log_prob, value, reward_ten, masks)
-            old_action_log_prob = action_log_prob
-            # print(action_log_prob, action_log_prob.shape)
+            # rollouts.insert(torch.Tensor(obs), pre_recurrent_hidden_states, pre_action, pre_action_log_prob, pre_value, reward_ten, pre_masks)
+            rollouts.insert(torch.Tensor(obs), pre_recurrent_hidden_states, pre_action, pre_action_log_prob, pre_value, reward_ten, pre_masks)
+
+            pre_action = action
+            pre_action_item = action_item
+            pre_action_log_prob = action_log_prob
+            pre_recurrent_hidden_states = recurrent_hidden_states
+            pre_value = value
+            masks = torch.FloatTensor([[0.0] if done else [1.0]])
+            pre_action_item_oh = convert_one_hot(pre_action_item, 7)
 
         f.write("\ntime:"+str(time.strftime('%H:%M:%S', time.localtime(time.time())))+"|"+str(j)+"|ep_r:"+str(ep_r)+"|pakcets:"+str(su_packets)+"|remove:"+str(remove_count)+"|ep_acc_r:"+str(ep_acc_r / 8000))
 
@@ -224,6 +243,12 @@ def main():
         #                           args.algo, args.num_frames)
         #     except IOError:
         #         pass
+
+
+def convert_one_hot(x, num):
+    a = [0 for _ in range(num)]
+    a[x] = 1
+    return a
 
 
 if __name__ == "__main__":
