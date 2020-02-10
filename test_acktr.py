@@ -104,7 +104,6 @@ def main():
         pre_action_item = random.randint(0, 6)
         pre_action_item_oh = convert_one_hot(pre_action_item, 7)
         s = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, end_time, pre_action_item_oh]
-        # s = s.extend(action_vector)
         states = [[0], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]  # 用来存储所有节点状态
         ep_r = 0
         ep_acc_r = 0
