@@ -17,14 +17,14 @@ class Policy(nn.Module):
         if base_kwargs is None:
             base_kwargs = {}
 
-        # if len(obs_shape) == 3:
-        #     self.base = CNNBase(obs_shape[0], **base_kwargs)
-        # elif len(obs_shape) == 1:
-        #     self.base = MLPBase(obs_shape[0], **base_kwargs)
-        # else:
-        #     raise NotImplementedError
-        self.base = MLPBase(obs_shape, **base_kwargs)
-
+        if len(obs_shape) == 3:
+            self.base = CNNBase(obs_shape[0], **base_kwargs)
+        elif len(obs_shape) == 1:
+            self.base = MLPBase(obs_shape[0], **base_kwargs)
+        else:
+            raise NotImplementedError
+        # self.base = MLPBase(obs_shape, **base_kwargs)
+        #
         if action_space.__class__.__name__ == "Discrete":
             num_outputs = action_space.n
             self.dist = Categorical(self.base.output_size, num_outputs)
@@ -180,6 +180,12 @@ class MLPBase(NNBase):
             init_normc_,
             lambda x: nn.init.constant_(x, 0))
 
+        # self.target = init_(nn.Linear(19, hidden_size))
+        # self.obs = init_(nn.Linear(7, hidden_size))
+        # self.hidden = init_(nn.Linear(hidden_size, hidden_size))
+        # self.active = nn.Tanh()
+        # self.attn = nn.Linear(hidden_size * 2, 2)
+
         self.actor = nn.Sequential(
             init_(nn.Linear(num_inputs, hidden_size)),
             nn.Tanh(),
@@ -200,11 +206,46 @@ class MLPBase(NNBase):
 
     def forward(self, inputs, rnn_hxs, masks):
         x = inputs
-
-        if self.is_recurrent:
-            x, rnn_hxs = self._forward_gru(x, rnn_hxs, masks)
+        # x1 = inputs[:, :19]
+        # x2 = inputs[:, 19:]
+        # if self.is_recurrent:
+        #     x, rnn_hxs = self._forward_gru(x, rnn_hxs, masks)
+        # a_out1 = self.target(x1)
+        # a_out1 = self.active(a_out1)
+        # a_out2 = self.obs(x2)
+        # a_out2 = self.active(a_out2)
+        # a_out = torch.cat((a_out1, a_out2), 1)  # (1, 128)
+        # a_out_z = torch.cat((a_out1.unsqueeze(1), a_out2.unsqueeze(1)), 1)  # (1, 2, 64)
+        # # a_hidden_out = self.hidden(a_out)
+        # a_attn_weights = F.softmax(self.attn(a_out), dim=1)
+        # # print(a_attn_weights.size(), a_out_z.size())
+        # a_attn_applied = torch.bmm(a_attn_weights.unsqueeze(1), a_out_z)  # (8000, 1, 64)
+        # a_attn_applied = a_attn_applied.squeeze(1)  # (8000, 64)
+        # # a_out = a_out.unsqueeze(0)
+        # # output = torch.cat((a_out, a_attn_applied), 1)
+        # # output = self.attn_combine(output)
+        # a_out = self.hidden(a_attn_applied)
+        # # a_out = self.hidden(a_out)
+        # a_out = self.active(a_out)
+        # #
+        # c_out1 = self.target(x1)
+        # c_out1 = self.active(c_out1)
+        # c_out2 = self.obs(x2)
+        # c_out2 = self.active(c_out2)
+        # c_out = torch.cat((c_out1, c_out2), 1)  # (8000, 128)
+        # c_out_z = torch.cat((c_out1.unsqueeze(1), c_out2.unsqueeze(1)), 1)  # (8000, 2, 64)
+        # # c_hidden_out = self.hidden(c_out)
+        # c_attn_weights = F.softmax(self.attn(c_out), dim=1)
+        # c_attn_applied = torch.bmm(c_attn_weights.unsqueeze(1), c_out_z)  # (8000, 1, 64)
+        # c_attn_applied = c_attn_applied.squeeze(1)  # (8000, 64)
+        # # c_attn_applied = torch.bmm(c_attn_weights.unsqueeze(0), c_out.unsqueeze(0))
+        # # output = torch.cat((c_out, c_attn_applied), 1)
+        # # output = self.attn_combine(output)
+        # c_out = self.hidden(c_attn_applied)
+        # # c_out = self.hidden(c_out)
+        # c_out = self.active(c_out)
 
         hidden_critic = self.critic(x)
         hidden_actor = self.actor(x)
-
+        # return self.critic_linear(c_out), a_out, rnn_hxs
         return self.critic_linear(hidden_critic), hidden_actor, rnn_hxs
